@@ -4,6 +4,10 @@
 \usecolortheme{beaver}
 
 \usepackage{graphicx, color}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{decorations.pathreplacing}
 
 \title{Prism: Scaling Bitcoin by 10,000$\times$}
 
@@ -15,6 +19,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \date[SBC 2020]{The Stanford Blockchain Conference 2020}
 
 \begin{document}
+\beamertemplatenavigationsymbolsempty
 
 \begin{frame}
 \titlepage
@@ -33,12 +38,229 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
     \pause
     \begin{block}{}
-        How much better can we do \textit{theortically}
+        How much better can we do \alert{theortically}
         \pause
-        and \textit{practically}?
+        and \alert{practically}?
 
         \pause
-        And how?
+        And how? % spoiler alert: we achieved good performance
     \end{block}
 \end{frame}
+
+\begin{frame}
+    \frametitle{This talk}
+    \tableofcontents
+\end{frame}
+
+\section{The Prism consensus protocol}
+
+\begin{frame}
+    \frametitle{This talk}
+    \tableofcontents[currentsection,currentsubsection]
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bitcoin: mine on the longest chain}
+    \begin{figure}
+        \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
+        \begin{tikzpicture}[auto, node distance=2em, >=latex']
+            \node[block](genesis){};
+            \pause
+            \node[block, below of=genesis](1){};
+            \draw[->](1) to (genesis);
+            \pause
+            \node[block, below of=1](2){};
+            \draw[->](2) to (1);
+            \pause
+            \node[block, below of=2](3){};
+            \node[block, right of=3](3fork){};
+            \draw[->](3fork) to (2);
+            \draw[->](3) to (2);
+            \node[block, below of=3](4){};
+            \draw[->](4) to (3);
+            \pause
+            \node[block, below of=4](5){};
+            \draw[->](5) to (4);
+        \end{tikzpicture}
+    \end{figure}
+    \uncover<+->{Mining rate $f$ = 1 block per 10 min}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Bitcoin: $k$-deep confirmation rule}
+    \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+        \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1.2em, minimum width=1.9em, text centered]
+        \tikzstyle{confirmed} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1.2em, minimum width=1.9em, text centered]
+        \tikzstyle{deconfirmed} = [draw,dashed, fill=yellow!20, rectangle, rounded corners, minimum height=1.2em, minimum width=1.9em, text centered]
+        \tikzstyle{badblock} = [draw, fill=red!20, rectangle, rounded corners, minimum height=1.2em, minimum width=1.9em, text centered]
+        \tikzstyle{badblockunreleased} = [draw,dashed, fill=red!10, rectangle, rounded corners, minimum height=1.2em, minimum width=1.9em, text centered]
+        \begin{tikzpicture}[auto, node distance=2.5em, >=latex']
+            \node<1->[block](genesis){};
+            \uncover<2,9-10>{
+                \node[block, below of=genesis](mine){TX};
+                \draw[->](mine) to (genesis);
+            }
+            \uncover<3-5, 11->{
+                \node[confirmed, below of=genesis](mineconfirmed){TX};
+                \draw[->](mineconfirmed) to (genesis);
+                \node[left=1em of mineconfirmed](){Confirmed};
+            }
+            \uncover<6-8>{
+                \node[deconfirmed, below of=genesis](minedeconfirmed){TX};
+                \draw[->](minedeconfirmed) to (genesis);
+            }
+            \uncover<4>{
+                \node[badblockunreleased, right of=mineconfirmed](bad1hidden){};
+                \node[badblockunreleased, below of=bad1hidden](bad2hidden){};
+                \draw[->](bad1hidden) to (genesis);
+                \draw[->](bad2hidden) to (bad1hidden);
+                \node[right=1em of bad1hidden](){Private chain};
+            }
+            \uncover<5-8,12->{
+                \node[badblock, right of=mineconfirmed](bad1){};
+                \node[badblock, below of=bad1](bad2){};
+                \draw[->](bad1) to (genesis);
+                \draw[->](bad2) to (bad1);
+            }
+            \uncover<7-8>{
+                \node[block, below of=bad2](bad3){};
+                \draw[->](bad3) to (bad2);
+                \node[right=1em of bad3](){Longest chain};
+            }
+            \uncover<8>{
+                \node[block, below of=bad3](bad4){};
+                \draw[->](bad4) to (bad3);
+            }
+            \uncover<10->{
+                \node[block, below of=mine](good1){};
+                \draw[->](good1) to (mine);
+                \node[block, below of=good1](good2){};
+                \draw[->](good2) to (good1);
+                \node[block, below of=good2](good3){};
+                \draw[->](good3) to (good2);
+                \node[block, below of=good3](good4){};
+                \draw[->](good4) to (good3);
+            }
+            \uncover<11->{
+                \draw[decoration={brace,mirror,raise=15pt,amplitude=6pt},decorate](mine.north) -- node[left=21pt] {$k$} (good4.south);
+            }
+            \uncover<12->{
+                \node[left=1em of good4](){Longest chain};
+            }
+        \end{tikzpicture}
+    \end{figure}
+    \column{.5\textwidth}
+    \uncover<13->{
+        \begin{block}{}
+        30\% adversary power
+
+        \uncover<14->{
+            \alert{For $10^{-3}$ attack probability, wait 250 mins!}
+        }
+
+        \smallskip
+        {\small
+        \centering
+        \begin{tabular}{r | c}
+            \hline
+            $k$ & $\epsilon$ \\ \hline
+            0 & 1.0000000 \\
+            5 & 0.1773523 \\
+            10 & 0.0416605 \\
+            15 & 0.0101008 \\
+            20 & 0.0024804 \\
+            \alert<14->{25} & \alert<14->{0.0006132} \\
+            30 & 0.0001522 \\
+            35 & 0.0000379 \\
+            40 & 0.0000095 \\
+            45 & 0.0000024 \\
+            50 & 0.0000006 \\ \hline
+        \end{tabular}
+        }
+        \end{block}
+    }
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Increasing the mining rate harms the security}
+    \begin{columns}
+        \column{.5\textwidth}
+        \begin{figure}
+            \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
+            \tikzstyle{badblockunreleased} = [draw,dashed, fill=red!10, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
+            \begin{tikzpicture}[auto, node distance=2em, >=latex']
+                \uncover<1->{
+                \node[block](genesis){};
+                \node[block, below of=genesis](1){};
+                \draw[->](1) to (genesis);
+                \node[block, below of=1](2){};
+                \draw[->](2) to (1);
+                \node[block, below of=2](3){};
+                \draw[->](3) to (2);
+                \node[block, below of=3](4){};
+                \draw[->](4) to (3);
+                \node[block, below of=4](5){};
+                \draw[->](5) to (4);
+                }
+                \uncover<2->{
+                \node[badblockunreleased, right of=1](b1){};
+                \draw[->](b1) to (genesis);
+                \node[badblockunreleased, below of=b1](b2){};
+                \draw[->](b2) to (b1);
+                \node[badblockunreleased, below of=b2](b3){};
+                \draw[->](b3) to (b2);
+                \node[badblockunreleased, below of=b3](b4){};
+                \draw[->](b4) to (b3);
+                }
+                \uncover<3->{
+                \node[block, right=5em of genesis](genesis){};
+                \node[block, below of=genesis](1){};
+                \draw[->](1) to (genesis);
+                \node[block, right of=1](2){};
+                \draw[->](2) to (genesis);
+                \node[block, below of=2](3){};
+                \draw[->](3) to (2);
+                \node[block, below of=1](4){};
+                \draw[->](4) to (1);
+                \node[block, left of=4](5){};
+                \draw[->](5) to (1);
+                }
+                \uncover<4->{
+                \node[badblockunreleased, right of=2](b1){};
+                \draw[->](b1) to (genesis);
+                \node[badblockunreleased, below of=b1](b2){};
+                \draw[->](b2) to (b1);
+                \node[badblockunreleased, below of=b2](b3){};
+                \draw[->](b3) to (b2);
+                \node[badblockunreleased, below of=b3](b4){};
+                \draw[->](b4) to (b3);
+                }
+            \end{tikzpicture}
+        \end{figure}
+        \column{.5\textwidth}
+        \uncover<5->{
+            \begin{figure}
+                \centering
+                \includegraphics{figure-source/mining-rate-security.pdf}
+            \end{figure}
+        }
+    \end{columns}
+\end{frame}
+
+\section{Our implementation}
+
+\begin{frame}
+    \tableofcontents[currentsection,currentsubsection]
+\end{frame}
+
+\section{Results and findings}
+
+\begin{frame}
+    \tableofcontents[currentsection,currentsubsection]
+\end{frame}
+
 \end{document}
