@@ -1,4 +1,4 @@
-set term pdf size 2.5,2 enhanced font ",16"
+set term pdf size 2.3,1.8 enhanced font ",16"
 set output "mining-rate-security.pdf"
 
 f(x) = 1.0 / (x * 1.5 + 2) * 100
