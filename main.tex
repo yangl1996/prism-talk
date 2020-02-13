@@ -422,8 +422,24 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
             \pause
         \item \alert{Throughput}: $(1-\beta)C$
             \pause
-        \item \alert{Confirmation Latency}: $O\left(D\right) + O\left(\frac{-D\text{ln}\left(\epsilon\right)}{m}\right)$
+        \item \alert{Confirmation Latency}: $O\left(D\right) + O\left(\frac{-D\log\left(\epsilon\right)}{m}\right)$
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Prism throughput approaches the network bandwidth}
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/theory-throughput.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Prism latency approaches the network latency}
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/theory-latency.pdf}
+    \end{figure}
 \end{frame}
 
 \section{System implementation}
