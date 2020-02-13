@@ -5,6 +5,7 @@
 
 \usepackage{graphicx, color, microtype}
 \usepackage{tikz}
+\usepackage{tikzsymbols}
 \usetikzlibrary{arrows}
 \usetikzlibrary{positioning}
 \usetikzlibrary{decorations.pathreplacing}
@@ -64,7 +65,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-    \frametitle{Bitcoin: mine on the longest chain}
+    \frametitle{Bitcoin: follow the longest chain}
     \begin{figure}
         \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
         \begin{tikzpicture}[auto, node distance=2em, >=latex']
@@ -92,7 +93,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 
 \begin{frame}
-    \frametitle{Bitcoin: $k$-deep confirmation rule}
+    \frametitle{Bitcoin latency: $k$-deep confirmation rule}
     \begin{columns}
     \column{.5\textwidth}
     \begin{figure}
@@ -165,6 +166,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
             \alert{For $10^{-3}$ attack probability, wait 250 mins!}
         }
 
+        Nakamoto's Table
         \smallskip
         {\small
         \centering
@@ -190,7 +192,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-    \frametitle{Increasing the mining rate harms the security}
+    \frametitle{Na\"ively increasing the mining rate harms the security}
     \begin{columns}
         \column{.5\textwidth}
         \begin{figure}
@@ -251,7 +253,6 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
                 \centering
                 \includegraphics{figure-source/mining-rate-security.pdf}
             \end{figure}
-            Same when increasing the block size
         }
     \end{columns}
 \end{frame}
@@ -287,81 +288,21 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-    \frametitle{Scale proposing with lots of transaction blocks}
+    \frametitle{Reduce the latency by increasing the voting rate}
     \begin{figure}
-        \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
+        \tikzstyle{proposer} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
         \tikzstyle{voter} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em]
-        \tikzstyle{proposer} = [draw, circle, fill=yellow!20]
         \begin{tikzpicture}[auto, node distance=2.3em, >=latex']
-            \node[transaction](tx1){};
-            \node[transaction, left of=tx1](tx2){};
-            \node[transaction, left of=tx2](tx3){};
-            \pause
-            \node[proposer, right= 2em of tx1](p1){};
-            \draw[->] (p1) to [bend right, looseness=1.0] (tx1);
-            \draw[->] (p1) to [bend right, looseness=1.0] (tx2);
-            \draw[->] (p1) to [bend right, looseness=1.0] (tx3);
-            \pause
-            \node[transaction, below of=tx1](tx4){};
-            \node[transaction, left of=tx4](tx5){};
-            \node[transaction, left of=tx5](tx6){};
-            \node[transaction, left of=tx6](tx7){};
-            \pause
+            \node[proposer](p1){};
             \node[proposer, below of=p1](p2){};
-            \draw[->] (p2) to [bend right, looseness=1.0] (tx4);
-            \draw[->] (p2) to [bend right, looseness=1.0] (tx5);
-            \draw[->] (p2) to [bend right, looseness=1.0] (tx6);
-            \draw[->] (p2) to [bend right, looseness=1.0] (tx7);
-            \draw[->] (p2) to (p1);
-            \pause
-            \node[transaction, below of=tx4](tx8){};
-            \node[transaction, left of=tx8](tx9){};
-            \node[proposer, below of=p2](p3){};
-            \draw[->] (p3) to (p2);
-            \draw[->] (p3) to [bend right, looseness=1.0] (tx8);
-            \draw[->] (p3) to [bend right, looseness=1.0] (tx9);
-            \pause
-            \node[transaction, below of=tx8](tx10){};
-            \node[transaction, left of=tx10](tx11){};
-            \node[transaction, left of=tx11](tx12){};
-            \node[proposer, below of=p3](p4){};
-            \draw[->] (p4) to [bend right, looseness=1.0] (tx10);
-            \draw[->] (p4) to [bend right, looseness=1.0] (tx11);
-            \draw[->] (p4) to [bend right, looseness=1.0] (tx12);
-            \draw[->] (p4) to (p3);
-        \end{tikzpicture}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Scale voting with lots of voter chains}
-    \begin{figure}
-        \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
-        \tikzstyle{voter} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em]
-        \tikzstyle{proposer} = [draw, circle, fill=yellow!20]
-        \begin{tikzpicture}[auto, node distance=2.3em, >=latex']
-            \node[transaction](tx1){};
-            \node[proposer, right= 2em of tx1](p1){};
-            \draw[->] (p1) to [bend right, looseness=1.0] (tx1);
-            \node[left of=tx1]{...};
-            \node[transaction, below of=tx1](tx2){};
-            \node[proposer, below of=p1](p2){};
-            \node[left of=tx2]{...};
-            \draw[->] (p2) to [bend right, looseness=1.0] (tx2);
             \uncover<1>{
                 \draw[->] (p2) to (p1);
             }
-            \node[transaction, below of=tx2](tx3){};
             \node[proposer, below of=p2](p3){};
-            \node[left of=tx3]{...};
             \uncover<1>{
                 \draw[->] (p3) to (p2);
             }
-            \draw[->] (p3) to [bend right, looseness=1.0] (tx3);
-            \node[transaction, below of=tx3](tx4){};
             \node[proposer, below of=p3](p4){};
-            \node[left of=tx4]{...};
-            \draw[->] (p4) to [bend right, looseness=1.0] (tx4);
             \uncover<1>{
                 \draw[->] (p4) to (p3);
             }
@@ -413,6 +354,131 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
         \item<4-> 1000 voter chains: 2-deep
     \end{itemize}
 \end{frame}
+
+\begin{frame}
+    \frametitle{Bitcoin throughput: block size $\times$ mining rate}
+    \begin{block}{}
+        Latency \cChangey[1.5]{2}, throughput \cChangey[1.5]{-1}
+    \end{block}
+    \pause
+    \begin{block}{}
+        \begin{itemize}
+            \item Mining rate: forking
+                \pause
+            \item Block size: also forking
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Increase the throughput with lots of transaction blocks}
+    \begin{figure}
+        \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
+        \tikzstyle{voter} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em]
+        \tikzstyle{proposer} = [draw, circle, fill=yellow!20]
+        \begin{tikzpicture}[auto, node distance=2.3em, >=latex']
+            \uncover<1-2>{
+                \node[transaction](p1){};
+                \node[transaction, below of=p1](p2){};
+                \node[transaction, below of=p2](p3){};
+                \node[transaction, below of=p3](p4){};
+            }
+            \uncover<2->{
+                \node[transaction, left of=p1](t11){};
+                \node[transaction, left of=t11](t12){};
+                \node[transaction, left of=t12](t13){};
+                \node[transaction, left of=p2](t21){};
+                \node[transaction, left of=t21](t22){};
+                \node[transaction, left of=t22](t23){};
+                \node[transaction, left of=t23](t24){};
+                \node[transaction, left of=p3](t31){};
+                \node[transaction, left of=t31](t32){};
+                \node[transaction, left of=p4](t41){};
+                \node[transaction, left of=t41](t42){};
+                \node[transaction, left of=t42](t43){};
+            }
+            \uncover<3->{
+                \node[proposer](p1l){};
+                \node[proposer, below of=p1l](p2l){};
+                \node[proposer, below of=p2l](p3l){};
+                \node[proposer, below of=p3l](p4l){};
+            }
+            \uncover<4->{
+                \draw[->] (p1l) to [bend right, looseness=1.0] (t11);
+                \draw[->] (p1l) to [bend right, looseness=1.0] (t12);
+                \draw[->] (p1l) to [bend right, looseness=1.0] (t13);
+                \draw[->] (p2l) to [bend right, looseness=1.0] (t21);
+                \draw[->] (p2l) to [bend right, looseness=1.0] (t22);
+                \draw[->] (p2l) to [bend right, looseness=1.0] (t23);
+                \draw[->] (p2l) to [bend right, looseness=1.0] (t24);
+                \draw[->] (p3l) to [bend right, looseness=1.0] (t31);
+                \draw[->] (p3l) to [bend right, looseness=1.0] (t32);
+                \draw[->] (p4l) to [bend right, looseness=1.0] (t41);
+                \draw[->] (p4l) to [bend right, looseness=1.0] (t42);
+                \draw[->] (p4l) to [bend right, looseness=1.0] (t43);
+            }
+            \uncover<1->{
+                \node[voter, right=2em of p1](v11){};
+                \node[voter, below of=v11](v12){};
+                \node[voter, below of=v12](v13){};
+                \node[voter, below of=v13](v14){};
+                \draw[->] (v12) to (v11);
+                \draw[->] (v13) to (v12);
+                \draw[->] (v14) to (v13);
+                \node[voter, right of=v11](v21){};
+                \node[voter, below of=v21](v22){};
+                \node[voter, below of=v22](v23){};
+                \node[voter, below of=v23](v24){};
+                \draw[->] (v22) to (v21);
+                \draw[->] (v23) to (v22);
+                \draw[->] (v24) to (v23);
+                \node[right of=v21](v31){\dots};
+                \node[right of=v22](v32){\dots};
+                \node[right of=v23](v33){\dots};
+                \node[right of=v24](v34){\dots};
+                \node[voter, right of=v31](v41){};
+                \node[voter, below of=v41](v42){};
+                \node[voter, below of=v42](v43){};
+                \node[voter, below of=v43](v44){};
+                \draw[->] (v42) to (v41);
+                \draw[->] (v43) to (v42);
+                \draw[->] (v44) to (v43);
+            }
+            \uncover<1-2>{
+                \draw[densely dashed, ->] (v11) to [bend right, looseness=1.0] (p1);
+                \draw[densely dashed, ->] (v12) to [bend right, looseness=1.0] (p2);
+                \draw[densely dashed, ->] (v13) to [bend right, looseness=1.0] (p3);
+                \draw[densely dashed, ->] (v14) to [bend right, looseness=1.0] (p4);
+                \draw[densely dashed, ->] (v21) to [bend right, looseness=1.0] (p1);
+                \draw[densely dashed, ->] (v22) to [bend right, looseness=1.0] (p2);
+                \draw[densely dashed, ->] (v23) to [bend right, looseness=1.0] (p3);
+                \draw[densely dashed, ->] (v24) to [bend right, looseness=1.0] (p4);
+                \draw[densely dashed, ->] (v41) to [bend right, looseness=1.0] (p1);
+                \draw[densely dashed, ->] (v42) to [bend right, looseness=1.0] (p2);
+                \draw[densely dashed, ->] (v43) to [bend right, looseness=1.0] (p3);
+                \draw[densely dashed, ->] (v44) to [bend right, looseness=1.0] (p4);
+            }
+            \uncover<3->{
+                \draw[densely dashed, ->] (v11) to [bend right, looseness=1.0] (p1l);
+                \draw[densely dashed, ->] (v12) to [bend right, looseness=1.0] (p2l);
+                \draw[densely dashed, ->] (v13) to [bend right, looseness=1.0] (p3l);
+                \draw[densely dashed, ->] (v14) to [bend right, looseness=1.0] (p4l);
+                \draw[densely dashed, ->] (v21) to [bend right, looseness=1.0] (p1l);
+                \draw[densely dashed, ->] (v22) to [bend right, looseness=1.0] (p2l);
+                \draw[densely dashed, ->] (v23) to [bend right, looseness=1.0] (p3l);
+                \draw[densely dashed, ->] (v24) to [bend right, looseness=1.0] (p4l);
+                \draw[densely dashed, ->] (v41) to [bend right, looseness=1.0] (p1l);
+                \draw[densely dashed, ->] (v42) to [bend right, looseness=1.0] (p2l);
+                \draw[densely dashed, ->] (v43) to [bend right, looseness=1.0] (p3l);
+                \draw[densely dashed, ->] (v44) to [bend right, looseness=1.0] (p4l);
+            }
+        \end{tikzpicture}
+    \end{figure}
+    \uncover<5>{
+        Latency \cChangey[1.5]{2}, throughput \cChangey[1.5]{2}
+    }
+\end{frame}
+
 
 \begin{frame}
     \frametitle{Prism is provably fast and secure}
