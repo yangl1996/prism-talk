@@ -1,0 +1,31 @@
+# Topology: Degree-4 random regular, 100 nodes
+# Resource: one node per machine, NVMe
+# Network: 120ms latency, 400mbps rate limiter, tune TCP buffer sizes
+# Node: 1000 voter chains
+# Security: exp(-20), beta=40%, mining rate=0.1 (optimal)
+
+# bw: bandwidth provided (mbps)
+# ltcy: for reference
+# thruput: throughput of transactions
+# vfork: voter forking rate (orphan blocks / tot. blocks)
+# pfork: proposer forking rate
+# delay: block propagation delay
+
+# bw	ltcy	thruput	vfork	pfork	delay	comment
+400	40.262	74227.8	0.1222	0.0652	1.4	rate limiter to 78000
+300	51.103	74235.6	0.1269	0.1389	1.4	78000
+200	42.756	74572.9	0.1327	0.0455	1.4	78000
+170	39.688	67309.0	0.1405	0.0930	1.6	69000
+150	41.893	60294.6	0.1408	0.1400	1.6	61000
+130	36.916	52880.3	0.1450	0.2000	1.7	53000, failed 54000
+110	35.846	43444.6	0.1470	0.1774	1.8	44000, failed 45000
+90	49.161	34224.6	0.1569	0.1698	2.0	36000
+70	39.917	28033.9	0.1570	0.1930	1.9	27500
+50	42.620	18746.5	0.1499	0.2537	1.8	18500
+30	43.284	10366.3	0.1548	0.0870	1.8	10500
+
+# Experiment
+# Compile for 80k and limit tx generation rate at 70k
+
+# Notes
+# Transaction size: 168 bytes (measured by Rust struct)

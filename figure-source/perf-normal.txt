@@ -1,0 +1,25 @@
+# Topology: Degree-4 random regular
+# Resource: ec2.4xlarge, various cores
+# Network: 120ms latency, 400mbps rate limiter, tune TCP buffer sizes
+# Node: 1000 voter chains
+
+# cores: number of CPU cores enabled
+# thruput: achievable transaction throughput
+# psre: tx generation rate (only for reference and reproduce)
+
+# cores	thruput	psre	comment
+1	12464	17500
+2	27460	33000
+3	38088	46000
+4	47526	60000
+5	59985	65000
+6	66864	70000
+7	72001	70000
+16	74228
+
+# Experiment Steps
+# 1. Compile Prism for 70k transactions/s
+# 2. Start Prism and reduce transaction rate to 100 tx/s
+# 3. Wait until all backlog transactions are confirmed
+# 4. Reduce the number of cores to N
+# 5. Set transaction rate to R and probe for the max rate N cores can handle

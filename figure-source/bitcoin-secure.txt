@@ -1,0 +1,19 @@
+# Topology: Degree-4 random regular
+# Resource: one node per machine, NVMe
+# Network: 120ms latency, 400mbps rate limiter, tune TCP buffer sizes
+# Node: 9a5a1a8, exp(-10) confidence
+
+# mrate: proposer/transaction block mining rate
+# tsize: transaction block size (number of transactions)
+# sec: security we are targeting for
+# depth: number of blocks to wait for
+# ltcy: confirmation latency
+# thruput: throughput of transactions
+# fork: forking rate
+# delay: block delay
+
+# mrate	tsize	sec	depth	ltcy	thruput	fork	delay	comment
+0.1677	10	33	97	639.24	1.6779	0.170	1.37
+0.1167	260	33	95	998.64	32.110	0.162	2.18
+0.1186	1000	33	93	1067.9	118.64	0.185	2.32
+0.0654	4000	33	97	1955.8	282.27	0.132	4.00

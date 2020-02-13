@@ -8,6 +8,7 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{positioning}
 \usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{fit}
 
 \usepackage[style=authortitle,backend=biber]{biblatex}
 \addbibresource{ref.bib}
@@ -449,13 +450,330 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-
+    \frametitle{Implementing Prism in Rust}
+    \begin{itemize}
+        \item 10,000 lines of Rust
+        \item UTXO model
+        \item Pay-to-public-key transactions
+        \item Code available at t.leiy.me/prism-code
+    \end{itemize}
 \end{frame}
 
-\section{Results and findings}
+\begin{frame}
+    \frametitle{Blockchain client: consensus and ledger keeping}
+    \begin{figure}
+        \tikzstyle{ledger} = [draw, fill=blue!20, rectangle, 
+        minimum height=4em, minimum width=6em, text centered, text width=5em]
+        \tikzstyle{blockchain} = [draw, fill=red!20, rectangle, minimum height=4em, minimum width=6em, text centered, text width=5em]
+        \tikzstyle{miner} = [draw, fill=green!20, rectangle, minimum height=4em, minimum width=6em, text centered, text width=5em]
+
+        \tikzstyle{database} = [draw, fill=yellow!20, rectangle, rounded corners, text width=5em, minimum height=3em, minimum width=6em, text centered]
+
+        % The block diagram code is probably more verbose than necessary
+        \begin{tikzpicture}[auto, node distance=2.8cm,>=latex']
+            \uncover<1->{
+            \node [database] (blockchaindb) {Block Structure Database};
+            \node [blockchain, above=0.5cm of blockchaindb] (blockchain) {Block Structure Manager};
+            \node [database, left of=blockchain] (blockdb) {Block Database};
+            \draw [<->] (blockchaindb) -- node[name=a] {} (blockchain);
+            \draw [<->] (blockchain) -- node[name=g]{} (blockdb);
+            \node [above=0.5cm of blockchain] (peers) {Peers};
+            \draw [<->] (peers) -- node[name=j]{} (blockchain);
+            }
+            \uncover<2->{
+            \node [miner, right of=blockchaindb] (miner) {Miner};
+            \node [database, right of=blockchain] (mempool) {Memory Pool};
+            \node [right of=peers] (newtx) {New Transactions};
+            \draw [->] (blockchaindb) -- node[name=b] {} (miner);
+            \draw [<-] (blockchain) -- node[name=d] {} (miner);
+            \draw [->] (blockchain) -- node[name=f]{} (mempool);
+            \draw [<->] (miner) -- node[name=e]{} (mempool);
+            \draw [->] (newtx) -- node[name=k]{} (mempool);
+            }
+            \uncover<3->{
+            \node [ledger, left of=blockchaindb] (ledger) {Ledger Manager};
+            \node [database, left of=ledger] (utxodb) {UTXO Database};
+            \draw [<->] (blockchaindb) -- node[name=c] {} (ledger);
+            \draw [<->] (ledger) -- node[name=h]{} (utxodb);
+            \draw [<-] (ledger) -- node[name=i]{} (blockdb);
+            }
+        \end{tikzpicture}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{High throughput brings challenges}
+    In real time:
+    \begin{itemize}
+        \item 70,000 tps
+        \item 400 blocks/s
+        \item 1000 chains
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Enable parallel transaction execution with scoreboarding}
+    \begin{figure}
+        \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, minimum height=1em, minimum width=1.6em, text centered]
+        \tikzstyle{cpu} = [draw, densely dashed, rectangle, inner sep=1.5mm, line width=1.8pt, color=olive]
+        \tikzstyle{coin} = [draw, circle, fill=yellow!20, text centered]
+        \tikzstyle{badcoin} = [draw, circle, fill=red!20, text centered]
+        \begin{tikzpicture}[auto, node distance=2.2em, >=latex']
+            \node [transaction](t1){A$\rightarrow$C};
+            \node [transaction, below of=t1](t2){A$\rightarrow$D};
+            \node [transaction, below of=t2](t3){B$\rightarrow$E};
+            \node [transaction, below of=t3](t4){E$\rightarrow$F};
+            \uncover<1-5,10-13,16-19>{
+                \node [coin,left=2em of t1](b){B};
+            }
+            \uncover<1-2,10-11,16-19>{
+                \node [coin,left=1em of b](a){A};
+            }
+            \uncover<3-9,20->{
+                \node [coin, left=1em of b](c){C};
+            }
+            \uncover<6-7,20-23>{
+                \node [coin, left=2em of t1](e){E};
+            }
+            \uncover<8-9,24->{
+                \node [coin, left=2em of t1](f){F};
+            }
+            \uncover<12-15>{
+                \node [badcoin, left=1em of b](d){D};
+            }
+            \uncover<14-15>{
+                \node [badcoin, left=2em of t1](e2){E};
+            }
+
+            \uncover<2-3,11-12,18-20>{
+                \node [cpu, fit=(t1)]{};
+            }
+            \uncover<4,11-12,23-24>{
+                \node [cpu, fit=(t2)]{};
+            }
+            \uncover<5-6,13-14,19-20>{
+                \node [cpu, fit=(t3)]{};
+            }
+            \uncover<7-8,13-14,23-24>{
+                \node [cpu, fit=(t4)]{};
+            }
+        \end{tikzpicture}
+    \end{figure}
+    \uncover<16->{
+        \alert{Scoreboard: }
+        \only<17-18>{
+            A, C
+        }
+        \only<19-20>{
+            A, B, C, E
+        }
+        \only<21>{}
+        \only<22-24>{A, D, E, F}
+        \only<25>{}
+    }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Enable parallel transaction execution with scoreboarding}
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/resource-fig-cpu.pdf}
+    \end{figure}
+\end{frame}
+
+% TODO: polish
+\begin{frame}
+    \frametitle{Handle high block rate with async ledger update}
+    \begin{figure}
+        \tikzstyle{ledger} = [draw, fill=blue!20, rectangle, 
+        minimum height=4em, minimum width=6em, text centered, text width=5em]
+        \tikzstyle{blockchain} = [draw, fill=red!20, rectangle, minimum height=4em, minimum width=6em, text centered, text width=5em]
+        \tikzstyle{miner} = [draw, fill=green!20, rectangle, minimum height=4em, minimum width=6em, text centered, text width=5em]
+
+        \tikzstyle{database} = [draw, fill=yellow!20, rectangle, rounded corners, text width=5em, minimum height=3em, minimum width=6em, text centered]
+
+        % The block diagram code is probably more verbose than necessary
+        \begin{tikzpicture}[auto, node distance=2.8cm,>=latex']
+            \uncover<1>{
+            \node [database] (blockchaindb) {Block Structure Database};
+            }
+            \uncover<1->{
+            \node [blockchain, above=0.5cm of blockchaindb] (blockchain) {Block Structure Manager};
+            \node [miner, right of=blockchaindb] (miner) {Miner};
+            \node [ledger, left of=blockchaindb] (ledger) {Ledger Manager};
+            \draw [<-] (blockchain) -- node[name=d] {} (miner);
+            }
+            \uncover<1>{
+            \node [database, left of=blockchain] (blockdb) {Block Database};
+            \draw [<->] (blockchaindb) -- node[name=a] {} (blockchain);
+            \draw [<->] (blockchain) -- node[name=g]{} (blockdb);
+            \node [above=0.5cm of blockchain] (peers) {Peers};
+            \draw [<->] (peers) -- node[name=j]{} (blockchain);
+            }
+            \uncover<1>{
+            \node [database, right of=blockchain] (mempool) {Memory Pool};
+            \node [right of=peers] (newtx) {New Transactions};
+            \draw [->] (blockchaindb) -- node[name=b] {} (miner);
+            \draw [->] (blockchain) -- node[name=f]{} (mempool);
+            \draw [<->] (miner) -- node[name=e]{} (mempool);
+            \draw [->] (newtx) -- node[name=k]{} (mempool);
+            }
+            \uncover<1>{
+            \node [database, left of=ledger] (utxodb) {UTXO Database};
+            \draw [<->] (blockchaindb) -- node[name=c] {} (ledger);
+            \draw [<->] (ledger) -- node[name=h]{} (utxodb);
+            \draw [<-] (ledger) -- node[name=i]{} (blockdb);
+            }
+        \end{tikzpicture}
+    \end{figure}
+    \uncover<2->{
+    \begin{itemize}
+        \item Ledger updates are ``infrequent''
+        \item Sanitize later
+    \end{itemize}
+    }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Reduce spams using random jittering}
+    \begin{figure}
+        \tikzstyle{node} = [draw, fill=green!20, rectangle, 
+        minimum height=4em, minimum width=6em, text centered, text width=5em]
+        \tikzstyle{transaction} = [draw, fill=yellow!20, rectangle, minimum height=1em, minimum width=1.6em, text centered]
+        \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=2.5em, minimum width=2.5em, text centered]
+        \begin{tikzpicture}[auto, node distance=4em,>=latex']
+            \node[node](n1){Node 1};
+            \node[node, right=7em of n1](n2){Node 2};
+            \draw[<->, line width=1.8pt](n1) -- (n2);
+            \uncover<2,5-7>{
+                \node[transaction, below of=n1](t1){A$\rightarrow$B};
+            }
+            \uncover<6-7>{
+                \node[left=1em of t1]{Delayed};
+            }
+            \uncover<2,5>{
+                \node[transaction, below of=n2](t2){A$\rightarrow$C};
+            }
+            \uncover<3-4>{
+                \node[block, above of=n1](b1){A$\rightarrow$B};
+                \node[block, above of=n2](b2){A$\rightarrow$C};
+            }
+            \uncover<4>{
+                \node[block, right= 0.5em of b1](b21){A$\rightarrow$C};
+                \node[block, left= 0.5em of b2](b12){A$\rightarrow$B};
+            }
+            \uncover<6-8>{
+                \node[block, above of=n2](b2){A$\rightarrow$C};
+            }
+            \uncover<7-8>{
+                \node[block, above of=n1](b21){A$\rightarrow$C};
+            }
+
+        \end{tikzpicture}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Reduce spams using random jittering}
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/attack-fig-spamming.pdf}
+    \end{figure}
+\end{frame}
+
+\section{Evaluation results and findings}
+
 
 \begin{frame}
     \tableofcontents[currentsection,currentsubsection]
 \end{frame}
+
+\begin{frame}
+    \frametitle{Testbed setup}
+    \begin{itemize}
+        \item 100 - 1000 AWS EC2 instances
+        \item Random 4-regular graph
+        \item 120ms propagation delay
+        \item 400 Mbps bandwidth
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Comparison with Algorand, Bitcoin-NG, Nakamoto}
+    % mention algorand bottleneck
+    \only<1>{
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/compare-fig-1.pdf}
+    \end{figure}
+    }
+    \only<2>{
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/compare-fig-2.pdf}
+    \end{figure}
+    }
+    \only<3>{
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/compare-fig.pdf}
+    \end{figure}
+    }
+    % TODO: mention scalability
+\end{frame}
+
+\begin{frame}
+    \frametitle{Prism is robust against censorship attacks}
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/attack-fig-censor.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Prism is robust against balancing attacks}
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/attack-fig-balancing.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Our implementation is efficient}
+    \begin{block}{CPU}
+    \begin{itemize}
+        \item Signature check: 22\%
+        \item RocksDB: 53\%
+        \item Data serialization: 7\%
+    \end{itemize}
+    \end{block}
+    \begin{block}{Bandwidth}
+    \begin{itemize}
+        \item Transaction blocks: 99.5\%
+        \item Voter blocks: 0.4\%
+        \item Proposer blocks: 0.1\%
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Takeaways}
+    \begin{block}{}
+    \begin{itemize}
+        \item Prism approaches the physical limit by deconstructing and scaling each part
+        \item Prism is proven with a real implementation
+        \item Building a high performance blockchain client requires careful design
+    \end{itemize}
+    \end{block}
+    \begin{block}{Resources}
+    \begin{itemize}
+        \item Code: t.leiy.me/prism-code
+        \item Theory Paper: Deconstructing the Blockchain to Approach Physical Limits
+        \item System Paper: t.leiy.me/prism-paper
+        \item Online Demo: t.leiy.me/prism-demo
+    \end{itemize}
+    \end{block}
+\end{frame}
+
 
 \end{document}

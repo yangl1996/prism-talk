@@ -1,0 +1,23 @@
+# Topology: Degree-4 random regular, 100 nodes
+# Resource: one node per machine, NVMe
+# Network: 120ms latency, 400mbps rate limiter, tune TCP buffer sizes
+# Node: 1000 voter chains
+# Security: exp(-20), beta=40%, mining rate=0.1 (optimal)
+
+# ratio: adversarial ratio
+# ltcy: for reference
+# thruput: throughput of transactions
+# vfork: voter forking rate (orphan blocks / tot. blocks)
+# pfork: proposer forking rate
+
+# ratio	ltcy	thruput	vfork	pfork
+0	38.677	73735.1	0.1215	0.0962
+5	37.720	70701.4	0.1228	0.1579
+10	37.498	67170.1	0.1218	0.1852
+15	36.156	65011.7	0.1225	0.1231
+20	34.085	58492.1	0.1209	0.1875
+25	40.706	57236.6	0.1218	0.1875
+#30	40.878	51510.1	0.1217	0.1228
+
+# tx generate capped at 77000
+# ./run.sh run-exp && ./run.sh tx-rate 77000 && telematics/telematics log
