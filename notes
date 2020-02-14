@@ -1,0 +1,79 @@
+ideas behind the design choices
+e.g. scorboarding because we don't need full-blown database problem
+
+stress that it is important to do transaction exeuction
+most clients just do ordering, performance number are bogus
+"you have to order fast, you have to exeute fast"
+
+voter blocks: if I can separate out the votes, it does not help (first slide, only one
+chain). then my goal is to stop at 2-deep. suppose that it's a 40% chance to reverse one
+chain. now what if I have 1000 chains. the chance is small to reverse more than half of it
+
+increase the time on the protocol.
+
+selfish mining, get an answer! talk to david
+
+say very clear that SSD is the bottleneck (we have moved the bottleneck to the SSD)
+
+the design of the longest chain protocol couples security and latency
+the protocol decouples throughput and latency from the security
+the protocol is now only bounded by the physical limits
+
+define symbols in the theory results slide
+put the definitions on the slide
+
+slide 44: latency is good? it's not good then because we have not increased the mining rate
+
+maybe talk about the security
+
+- the beta deticates the bound on forking
+- throw away the chain structue of transaction blocks
+
+
+
+1. longest chain protocol (longest chain mining and k-deep)
+2. throughput and latency are coupled, can't mine more blocks or larger because will fork
+3. forking compormises security
+4. decouple throughput from security (unstructured transaction blocks and order them)
+   - create throughput with a structure where forking does not matter
+   - have not dealt with latency as of yet
+5. then deal with votes. this chain also mines slowly
+    - show that prob. more voter chains gets reversed is low
+
+spend more time on the theory!
+- coupling
+- how to decoupling
+
+separate the theory from the implementation
+why the implementation is hard
+- exeuction is hard
+- block rate
+- you need parallelizm
+- two problems
+    - serialize or bounded by CPU
+    - how to do parallelization correctly
+after theory: what is the real-world performance (this is the contribution). what have
+you learned? what is really the number meaning? the theory does not really tell you that.
+- give examples predicted by the theory.
+- parallelization (tx, blocks)
+- database, disk io
+
+it is coming off as dealing with the huge rate. why?
+
+remove the system structure figure, just say ordering and consensus
+the bottleneck in our system will be the first part (ledger exeuctio) -> scoreboarding
+
+async should be added more content
+
+one line at a time
+draw names for different types of blocks
+
+introuduce the concepts in the utxo model
+
+talking
+- make more eye contacts
+- see how the audience are doing
+- don't look at the projector
+- keep face to the audience
+- prectice the talk more
+- do whatever you feel comfortable
