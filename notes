@@ -9,28 +9,34 @@ voter blocks: if I can separate out the votes, it does not help (first slide, on
 chain). then my goal is to stop at 2-deep. suppose that it's a 40% chance to reverse one
 chain. now what if I have 1000 chains. the chance is small to reverse more than half of it
 
+--- DONE ---
 increase the time on the protocol.
+--- DONE ---
 
 selfish mining, get an answer! talk to david
 
 say very clear that SSD is the bottleneck (we have moved the bottleneck to the SSD)
 
+--- DONE ---
 the design of the longest chain protocol couples security and latency
 the protocol decouples throughput and latency from the security
 the protocol is now only bounded by the physical limits
 
 define symbols in the theory results slide
 put the definitions on the slide
+--- DONE ---
 
 slide 44: latency is good? it's not good then because we have not increased the mining rate
 
+--- DONE ---
 maybe talk about the security
 
 - the beta deticates the bound on forking
 - throw away the chain structue of transaction blocks
+--- DONE ---
 
 
-
+--- DONE ---
 1. longest chain protocol (longest chain mining and k-deep)
 2. throughput and latency are coupled, can't mine more blocks or larger because will fork
 3. forking compormises security
@@ -43,6 +49,7 @@ maybe talk about the security
 spend more time on the theory!
 - coupling
 - how to decoupling
+--- DONE ---
 
 separate the theory from the implementation
 why the implementation is hard
@@ -60,8 +67,10 @@ you learned? what is really the number meaning? the theory does not really tell 
 
 it is coming off as dealing with the huge rate. why?
 
+--- DONE ---
 remove the system structure figure, just say ordering and consensus
 the bottleneck in our system will be the first part (ledger exeuctio) -> scoreboarding
+--- DONE ---
 
 async should be added more content
 
