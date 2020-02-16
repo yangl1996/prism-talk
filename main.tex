@@ -59,7 +59,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Bitcoin: high security, low throughput, and long latency}
-    \note{our solution in this problem is to first}
+    \note{to give you a high-level sense of how Prism achieves good performance,}
     \begin{itemize}
             \pause
         \item \alert{Deconstruct}
@@ -110,7 +110,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 
 \begin{frame}
-    \note{another important aspect of Bitcoin is when do we confirm transactions}
+    \note{another important aspect of Bitcoin is when do we confirm transactions. define confirm. attacker gets lucky mining faster than the honest party for the first few blocks. unlikely to keep ahead in the long run}
     \frametitle{Bitcoin: $k$-deep confirmation rule}
     \begin{columns}
     \column{.5\textwidth}
@@ -211,7 +211,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Calculating the performance of Bitcoin}
-    \note{explain the terms when introducing the formulas. we can increase mining rate to improve both, or at least increase the block size to improve the throughput. also say why it increase forking}
+    \note{now that we know how bitcoin works, let's calculate its performance. remember to explain why forking increases}
     \pause
     \begin{block}{Throughput}
         \alert<5>{Block size} $\times$ \alert<4>{Mining rate}
@@ -296,7 +296,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-    \note{we noticed that in bitcoin, performance is coupled with security. why is that? it is because a block has two roles}
+    \note{as previously mentioned, prism deconstructs the bitcoin blockchain. the main insight is that a bitcoin block serves two roles... I believe every block in that chain is valid. what role is associated to what performance}
     \frametitle{Deconstructing a block: proposing and voting}
     \begin{figure}
         \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1.3em, minimum width=2.1em, text centered]
@@ -328,7 +328,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Scale proposing with lots of transaction blocks}
-    \note{proposing is limited by forking. what if forking does not matter anymore. then bring order}
+    \note{bitcoin throughput is limited because of forking. if forking does not matter anymore, we can mine as much as possible. We achieve that using transaction blcoks. then begin order}
     \begin{figure}
         \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
         \tikzstyle{voter} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em]
