@@ -546,44 +546,6 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Blockchain client: consensus and ledger keeping}
-    \begin{figure}
-        \tikzstyle{ledger} = [draw, fill=blue!20, rectangle, 
-        minimum height=4em, minimum width=6em, text centered, text width=5em]
-        \tikzstyle{blockchain} = [draw, fill=red!20, rectangle, minimum height=4em, minimum width=6em, text centered, text width=5em]
-        \tikzstyle{miner} = [draw, fill=green!20, rectangle, minimum height=4em, minimum width=6em, text centered, text width=5em]
-
-        \tikzstyle{database} = [draw, fill=yellow!20, rectangle, rounded corners, text width=5em, minimum height=3em, minimum width=6em, text centered]
-
-        % The block diagram code is probably more verbose than necessary
-        \begin{tikzpicture}[auto, node distance=2.8cm,>=latex']
-            \uncover<1->{
-            \node [database] (blockchaindb) {Block Structure Database};
-            \node [blockchain, above=0.5cm of blockchaindb] (blockchain) {Block Structure Manager};
-            \node [database, left of=blockchain] (blockdb) {Block Database};
-            \draw [<->] (blockchaindb) -- node[name=a] {} (blockchain);
-            \draw [<->] (blockchain) -- node[name=g]{} (blockdb);
-            \node [above=0.5cm of blockchain] (peers) {Peers};
-            \draw [<->] (peers) -- node[name=j]{} (blockchain);
-            }
-            \uncover<2->{
-            \node [miner, right of=blockchaindb] (miner) {Miner};
-            \node [database, right of=blockchain] (mempool) {Memory Pool};
-            \node [right of=peers] (newtx) {New Transactions};
-            \draw [->] (blockchaindb) -- node[name=b] {} (miner);
-            \draw [<-] (blockchain) -- node[name=d] {} (miner);
-            \draw [->] (blockchain) -- node[name=f]{} (mempool);
-            \draw [<->] (miner) -- node[name=e]{} (mempool);
-            \draw [->] (newtx) -- node[name=k]{} (mempool);
-            }
-            \uncover<3->{
-            \node [ledger, left of=blockchaindb] (ledger) {Ledger Manager};
-            \node [database, left of=ledger] (utxodb) {UTXO Database};
-            \draw [<->] (blockchaindb) -- node[name=c] {} (ledger);
-            \draw [<->] (ledger) -- node[name=h]{} (utxodb);
-            \draw [<-] (ledger) -- node[name=i]{} (blockdb);
-            }
-        \end{tikzpicture}
-    \end{figure}
 \end{frame}
 
 \begin{frame}
