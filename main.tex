@@ -31,11 +31,11 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
 \titlepage
-    \note{start with ``I'm excited to be here to talk about''}
-    \note{say that mohammad is my advisor}
+    \note{start with ``I'm excited to be here to talk about'', say that mohammad is my advisor}
 \end{frame}
 
 \begin{frame}
+    \note{we all know that bitcoin has very good security...}
     \frametitle{Bitcoin: high security, low throughput, and long latency}
     \begin{block}{}
     \begin{itemize}
@@ -59,8 +59,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Bitcoin: high security, low throughput, and long latency}
-    \note{The idea that Prism takes, is to first deconstruct the blockchain into
-    two functional parts, and then scale each one}
+    \note{our solution in this problem is to first}
     \begin{itemize}
             \pause
         \item \alert{Deconstruct}
@@ -82,6 +81,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
+    \note{before talking about Prism, we need to first look at Bitcoin... Define forking}
     \frametitle{Bitcoin: the longest chain rule}
     \begin{figure}
         \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
@@ -110,6 +110,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 
 \begin{frame}
+    \note{another important aspect of Bitcoin is when do we confirm transactions}
     \frametitle{Bitcoin: $k$-deep confirmation rule}
     \begin{columns}
     \column{.5\textwidth}
@@ -210,23 +211,23 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Calculating the performance of Bitcoin}
-    \note{explain the terms when introducing the formulas.}
-    \note{we can increase mining rate to improve both, or at least increase the
-    block size to improve the throughput}
+    \note{explain the terms when introducing the formulas. we can increase mining rate to improve both, or at least increase the block size to improve the throughput. also say why it increase forking}
     \pause
     \begin{block}{Throughput}
         \alert<5>{Block size} $\times$ \alert<4>{Mining rate}
     \end{block}
     \pause
     \begin{block}{Latency}
-        Confirmation depth ($k$) $\times$ \alert<4>{Mining rate}
+        Confirmation depth ($k$) $\div$ \alert<4>{Mining rate}
     \end{block}
-    \pause
+    \uncover<6->{
     \alert{Increasing the mining rate or the block size causes forking}
+}
 \end{frame}
 
 \begin{frame}
     \frametitle{Forking compromises security}
+    \note{why forking compromises security. then how bad is it. forking essentially reduces the honest mining power}
     \begin{columns}
         \column{.5\textwidth}
         \begin{figure}
@@ -292,10 +293,10 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \uncover<4->{
         \alert{Bitcoin performance is coupled with security!}
     }
-        \note{end with ``so actually how bad is it'', it turns out to be pretty bad}
 \end{frame}
 
 \begin{frame}
+    \note{we noticed that in bitcoin, performance is coupled with security. why is that? it is because a block has two roles}
     \frametitle{Deconstructing a block: proposing and voting}
     \begin{figure}
         \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1.3em, minimum width=2.1em, text centered]
@@ -327,6 +328,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Scale proposing with lots of transaction blocks}
+    \note{proposing is limited by forking. what if forking does not matter anymore. then bring order}
     \begin{figure}
         \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
         \tikzstyle{voter} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em]
@@ -378,6 +380,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
+    \note{proposer block still has two roles: propose and vote. we want to reduce the confirmation depth k here. one chain? not helpful. 1000 chains? 40\% chance to revert one chain, low prob to reverse half}
     \frametitle{Scale voting with lots of voter chains}
     \begin{figure}
         \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
@@ -484,6 +487,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
+    \note{now that we have a good theory}
     \frametitle{Turning theory into real system}
     \begin{itemize}
             \pause
@@ -552,7 +556,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \begin{block}{Results}
     \begin{itemize}
         \item 70,000 tps
-        \item $\sims$10s latency
+        \item $\sim$10s latency
     \end{itemize}
     \end{block}
     \pause
@@ -639,6 +643,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \frametitle{Parallelize consensus with async ledger update}
     \begin{itemize}
         \item Ledger updates are ``infrequent''
+            \pause
         \item Don't do it every new block
     \end{itemize}
 \end{frame}
@@ -713,16 +718,34 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \only<1>{
     \begin{figure}
         \centering
-        \includegraphics{figure-source/compare-fig-1.pdf}
+        \includegraphics{figure-source/compare-fig-1-1.pdf}
     \end{figure}
     }
     \only<2>{
     \begin{figure}
         \centering
-        \includegraphics{figure-source/compare-fig-2.pdf}
+        \includegraphics{figure-source/compare-fig-1-2.pdf}
     \end{figure}
     }
     \only<3>{
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/compare-fig-1-3.pdf}
+    \end{figure}
+    }
+    \only<4>{
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/compare-fig-1-4.pdf}
+    \end{figure}
+    }
+    \only<5>{
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/compare-fig-2.pdf}
+    \end{figure}
+    }
+    \only<6>{
     \begin{figure}
         \centering
         \includegraphics{figure-source/compare-fig.pdf}
