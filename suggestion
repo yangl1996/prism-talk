@@ -1,0 +1,41 @@
+trasition from theory to the practice
+- theory is promising
+- we want to understand what is the real-world performance
+- follow the ccs paper intro section
+    - complex protocol
+    - simple network model, there could be large constants in the results
+    - other bottlenecks (model assumes the network)
+
+results is a bit late (the previous version is better, show the results earlier)
+
+3 minutes over: too many results (remove the attacks)
+
+clearly markred section in the talk about evaluation results
+- testbed, 100-1000 vms, emulated the network
+- ran several experiments: compare performance, robust under attacks, bottlenecks
+  (resource consumption) -- to refer people to the paper
+
+slide 2: remove the question in the slide
+slide 3: bitcoin couples security and throughput, latency; new protocol "Prism" that
+         decouples performance from security
+k-deep: improve the script (1.5 min)
+bitcoin performance analysis: after that, add a slide that dedicates to forking
+                              (some people follows by looking at the slide)
+tx blocks: propose tx block at high rate w/o impacting proposer forking BECAUSE proposer
+           still mines at low rate
+voter blocks: I'm going to introduce voters. JUST THINK OF IT AS DRAWING IN A DIFFERENT
+              WAY. Still 25 deep.
+implementation intro: expand UTXO
+                      After that: summarize the performance (keep 20% dots), ll cover later
+lessons learned: can be combined with conceptual design slide
+                 OR, make a dedicated slide and add optimizations (and going to talk about)
+scoreboard: annotate green box, cut the one-core example. start with "suppose 2 cores".
+            have an arrow pointing down say the order of transactions
+consensus: don't need to update the ledger when we receive each block
+           implication: miner don't know the ledger state. okay in Prism
+           invalid ones will be throwen away later
+           OR, at the beginning of impl, add a functional diagram, show that output of
+           consensus may have conflicts. say that the protocol allows invalid transaction
+           to be included in blocks (this is specific to Prism)
+
+Tues antoher run
