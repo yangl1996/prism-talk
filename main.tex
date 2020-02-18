@@ -45,26 +45,16 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
         \item \alert{Confirmation Latency}: hours
     \end{itemize}
     \end{block}
-
-    \pause
-    \begin{block}{}
-        How much better can we do \alert{theortically}
-        \pause
-        and \alert{practically}?
-
-        \pause
-        And how?
-    \end{block}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Bitcoin: high security, low throughput, and long latency}
-    \note{to give you a high-level sense of how Prism achieves good performance,}
+    \frametitle{Prism: decoupling performance from security}
+    \note{our main finding is that bitcoin couples security and thorughput, latency. the new protocol called ``Prism'' decouples performance from security}
     \begin{itemize}
             \pause
-        \item \alert{Deconstruct}
+        \item \alert{Bitcoin}: throughput, latency coupled with security
             \pause
-        \item \dots, and \alert{Scale}
+        \item \alert{Prism}: decouple performance from security
     \end{itemize}
 \end{frame}
 
@@ -110,6 +100,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 
 \begin{frame}
+    \note{improve the script (1.5 min). }
     \note{another important aspect of Bitcoin is when do we confirm transactions. define confirm. attacker gets lucky mining faster than the honest party for the first few blocks. unlikely to keep ahead in the long run}
     \frametitle{Bitcoin: $k$-deep confirmation rule}
     \begin{columns}
@@ -220,9 +211,24 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \begin{block}{Latency}
         Confirmation depth ($k$) $\div$ \alert<4>{Mining rate}
     \end{block}
-    \uncover<6->{
-    \alert{Increasing the mining rate or the block size causes forking}
 }
+\end{frame}
+
+\begin{frame}
+    \frametitle{Increasing the mining rate or the block size causes forking}
+    \note{forking happens when\dots}
+    \begin{columns}
+        %TODO: should we add a figure here
+        \column{.5\textwidth}
+        Forking happens when the next block is mined before the previous one is received.
+        \pause
+        \column{.5\textwidth}
+        \begin{itemize}
+            \item Mine faster $\rightarrow$ Shorter interval
+                \pause
+            \item Bigger blocks $\rightarrow$ Slower propagation
+        \end{itemize}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
@@ -329,6 +335,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \begin{frame}
     \frametitle{Scale proposing with lots of transaction blocks}
     \note{bitcoin throughput is limited because of forking. if forking does not matter anymore, we can mine as much as possible. We achieve that using transaction blcoks. then begin order}
+    \note{propose tx block at high rate w/o impacting proposer forking BECAUSE proposer still mines at low rate}
     \begin{figure}
         \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
         \tikzstyle{voter} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em]
@@ -380,7 +387,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-    \note{proposer block still has two roles: propose and vote. we want to reduce the confirmation depth k here. one chain? not helpful. 1000 chains? 40\% chance to revert one chain, low prob to reverse half}
+    \note{proposer block still has two roles: propose and vote. we want to reduce the confirmation depth k here. now I'm going to introduce voter blocks. just think of it as drawing the figure in a different way. one chain? not helpful. still 25 deep. 1000 chains? 40\% chance to revert one chain, low prob to reverse half}
     \frametitle{Scale voting with lots of voter chains}
     \begin{figure}
         \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
@@ -497,22 +504,6 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \end{itemize}
 \end{frame}
 
-%\begin{frame}
-%    \frametitle{Prism throughput approaches the network bandwidth}
-%    \begin{figure}
-%        \centering
-%        \includegraphics{figure-source/theory-throughput.pdf}
-%    \end{figure}
-%\end{frame}
-
-%\begin{frame}
-%    \frametitle{Prism latency approaches the network latency}
-%    \begin{figure}
-%        \centering
-%        \includegraphics{figure-source/theory-latency.pdf}
-%    \end{figure}
-%\end{frame}
-
 \section{System implementation}
 
 \begin{frame}
@@ -524,10 +515,19 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \frametitle{Implementing Prism in Rust}
     \begin{itemize}
         \item 10,000 lines of Rust
-        \item UTXO model
+        \item Unspent Transaction Output (UTXO) model
         \item Pay-to-public-key transactions
         \item Code available at t.leiy.me/prism-code
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Prism: $\sim$70,000 tps and $\sim$10s latency}
+    \note{I'll cover the comparison later}
+    \begin{figure}
+        \centering
+        \includegraphics{figure-source/compare-fig-1-4.pdf}
+    \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -629,7 +629,6 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \end{figure}
 \end{frame}
 
-% TODO: polish
 \begin{frame}
     \frametitle{Parallelize consensus with async ledger update}
     \begin{itemize}
@@ -742,23 +741,6 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
         \includegraphics{figure-source/compare-fig.pdf}
     \end{figure}
     }
-    % TODO: mention scalability
-\end{frame}
-
-\begin{frame}
-    \frametitle{Prism is robust against censorship attacks}
-    \begin{figure}
-        \centering
-        \includegraphics{figure-source/attack-fig-censor.pdf}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Prism is robust against balancing attacks}
-    \begin{figure}
-        \centering
-        \includegraphics{figure-source/attack-fig-balancing.pdf}
-    \end{figure}
 \end{frame}
 
 \begin{frame}
