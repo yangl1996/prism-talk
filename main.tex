@@ -211,7 +211,6 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \begin{block}{Latency}
         Confirmation depth ($k$) $\div$ \alert<4>{Mining rate}
     \end{block}
-}
 \end{frame}
 
 \begin{frame}
@@ -544,19 +543,10 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{What we learned}
-    \begin{block}{Results}
-    \begin{itemize}
-        \item 70,000 tps
-        \item $\sim$10s latency
-    \end{itemize}
-    \end{block}
-    \pause
-    \begin{block}{Lessons Learned}
         \begin{itemize}
             \item Bottlenecks: ledger keeping, SSD
             \item Must parallelize
         \end{itemize}
-    \end{block}
 \end{frame}
 
 \begin{frame}
@@ -700,6 +690,17 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
         \item 120ms propagation delay
         \item 400 Mbps bandwidth
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Experiments}
+    \note{explain the experiments not just read the bullet points}
+        \begin{itemize}
+            \item \alert<2>{Comparison of throughput, latency with Algorand, Bitcoin-NG, Longest Chain}
+            \item Scalability to 1000 nodes
+            \item \alert<2>{CPU, bandwidth utilization}
+            \item Censorship, spamming, balancing attacks
+        \end{itemize}
 \end{frame}
 
 \begin{frame}

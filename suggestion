@@ -10,6 +10,7 @@ results is a bit late (the previous version is better, show the results earlier)
 
 3 minutes over: too many results (remove the attacks)
 
+--- DONE ---
 clearly markred section in the talk about evaluation results
 - testbed, 100-1000 vms, emulated the network
 - ran several experiments: compare performance, robust under attacks, bottlenecks
