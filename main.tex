@@ -536,14 +536,35 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Blockchain client: consensus and ledger keeping}
+    \note{say that after consensus, there could be invalid transactions. consensus is just providing an ordering}
     \note{say that many clients just do ordering and the performance numbers
     are not real. you have to order and execute fast}
+    \begin{columns}
+        \column{.5\textwidth}
     \begin{itemize}
-        \item \alert{Consensus}: keep track of the blockchains and mine
-        \item \alert{Ledger keeping}: process transactions and calculate the UTXO set
+        \item<2-> \alert{Consensus}: keep track of the blockchains and mine
+        \item<4-> \alert{Ledger keeping}: process transactions and calculate the UTXO set
     \end{itemize}
-    \pause
-    \alert{Must be fast at both}
+        \column{.5\textwidth}
+    \begin{figure}
+        \tikzstyle{function} = [draw, fill=orange!20, rectangle, minimum height=1em, minimum width=1.6em, text centered]
+        \begin{tikzpicture}[auto, node distance=2.2em, >=latex']
+        \uncover<2->{
+            \node(blocks){Blocks};
+            \node[function,below= 1.5em of blocks](consensus){Consensus};
+            \draw[->, line width=1.3pt] (blocks) to (consensus);
+            \node[below= 1.5em of consensus](ordered){\alert<3>{Ordered} Transactions};
+            \draw[->, line width=1.3pt] (consensus) to (ordered);
+        }
+        \uncover<4->{
+            \node[function, below= 1.5em of ordered] (lk) {Ledger Keeping};
+            \draw[->, line width=1.3pt] (ordered) to (lk);
+            \node[below= 1.5em of lk](utxo){UTXO Set};
+            \draw[->, line width=1.3pt] (lk) to (utxo);
+        }
+        \end{tikzpicture}
+    \end{figure}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
