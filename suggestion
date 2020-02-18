@@ -1,3 +1,4 @@
+--- DONE ---
 trasition from theory to the practice
 - theory is promising
 - we want to understand what is the real-world performance
@@ -10,7 +11,6 @@ results is a bit late (the previous version is better, show the results earlier)
 
 3 minutes over: too many results (remove the attacks)
 
---- DONE ---
 clearly markred section in the talk about evaluation results
 - testbed, 100-1000 vms, emulated the network
 - ran several experiments: compare performance, robust under attacks, bottlenecks
@@ -29,10 +29,15 @@ voter blocks: I'm going to introduce voters. JUST THINK OF IT AS DRAWING IN A DI
 implementation intro: expand UTXO
                       After that: summarize the performance (keep 20% dots), ll cover later
 --- DONE ---
+
 lessons learned: can be combined with conceptual design slide
                  OR, make a dedicated slide and add optimizations (and going to talk about)
+
+--- DONE ---
 scoreboard: annotate green box, cut the one-core example. start with "suppose 2 cores".
             have an arrow pointing down say the order of transactions
+--- DONE ---
+
 consensus: don't need to update the ledger when we receive each block
            implication: miner don't know the ledger state. okay in Prism
            invalid ones will be throwen away later
