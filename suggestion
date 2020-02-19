@@ -28,12 +28,10 @@ voter blocks: I'm going to introduce voters. JUST THINK OF IT AS DRAWING IN A DI
               WAY. Still 25 deep.
 implementation intro: expand UTXO
                       After that: summarize the performance (keep 20% dots), ll cover later
---- DONE ---
 
 lessons learned: can be combined with conceptual design slide
                  OR, make a dedicated slide and add optimizations (and going to talk about)
 
---- DONE ---
 scoreboard: annotate green box, cut the one-core example. start with "suppose 2 cores".
             have an arrow pointing down say the order of transactions
 --- DONE ---

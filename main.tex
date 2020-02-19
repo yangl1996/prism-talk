@@ -570,12 +570,23 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-    \frametitle{What we learned}
-    \note{Prism moves the bottleneck from consensus to ledger keeping}
+    \frametitle{Achieving high throughput}
+    \note{Prism moves the bottleneck from consensus to ledger keeping, and must parallelize both. Then list the optimizations and say that we are going to talk about the first two}
+    \begin{block}{Lessons}
         \begin{itemize}
             \item Bottlenecks: ledger keeping, SSD
             \item Must parallelize
         \end{itemize}
+    \end{block}
+        \pause
+        \begin{block}{Optimizations}
+            \begin{itemize}
+                \item \alert<3>{``Scoreboarding''}
+                \item \alert<3>{Async ledger keeping}
+                \item Functional design pattern
+                \item No transaction broadcasting
+            \end{itemize}
+        \end{block}
 \end{frame}
 
 \begin{frame}
