@@ -700,53 +700,6 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Reduce spams using random jittering}
-    \begin{figure}
-        \tikzstyle{node} = [draw, fill=green!20, rectangle, 
-        minimum height=4em, minimum width=6em, text centered, text width=5em]
-        \tikzstyle{transaction} = [draw, fill=yellow!20, rectangle, minimum height=1em, minimum width=1.6em, text centered]
-        \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=2.5em, minimum width=2.5em, text centered]
-        \begin{tikzpicture}[auto, node distance=4em,>=latex']
-            \node[node](n1){Node 1};
-            \node[node, right=7em of n1](n2){Node 2};
-            \draw[<->, line width=1.8pt](n1) -- (n2);
-            \uncover<2,5-7>{
-                \node[transaction, below of=n1](t1){A$\rightarrow$B};
-            }
-            \uncover<6-7>{
-                \node[left=1em of t1]{Delayed};
-            }
-            \uncover<2,5>{
-                \node[transaction, below of=n2](t2){A$\rightarrow$C};
-            }
-            \uncover<3-4>{
-                \node[block, above of=n1](b1){A$\rightarrow$B};
-                \node[block, above of=n2](b2){A$\rightarrow$C};
-            }
-            \uncover<4>{
-                \node[block, right= 0.5em of b1](b21){A$\rightarrow$C};
-                \node[block, left= 0.5em of b2](b12){A$\rightarrow$B};
-            }
-            \uncover<6-8>{
-                \node[block, above of=n2](b2){A$\rightarrow$C};
-            }
-            \uncover<7-8>{
-                \node[block, above of=n1](b21){A$\rightarrow$C};
-            }
-
-        \end{tikzpicture}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Reduce spams using random jittering}
-    \begin{figure}
-        \centering
-        \includegraphics{figure-source/attack-fig-spamming.pdf}
-    \end{figure}
-\end{frame}
-
 \section{Evaluation results and findings}
 
 
