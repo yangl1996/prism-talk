@@ -34,10 +34,11 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \begin{frame}
 \titlepage
     \note{start with ``I'm excited to be here to talk about''}
+    \note{In the spirit of blockchain, it’s a collaborator effort across four different university\dots}
 \end{frame}
 
 \begin{frame}
-    \note{we all know that bitcoin has very good security...}
+    \note{we all know that bitcoin has very good security... don't say the numbers}
     \frametitle{Bitcoin: high security, low throughput, and long latency}
     \begin{block}{}
     \begin{itemize}
@@ -51,13 +52,16 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Prism: decoupling performance from security}
+    \note{in bitcoin, there is one parameter that ties the whole system together. If we want to improve the performance, we will suffer in security. And vice versa. And by default, Bitcoin operates at high security, and hence low performance. The only way to improve is to decouple. And the way the decoupling is done is by continuing the spirit of the longest chain design. In fact, if you listen to my collaborator, he said if Nakamoto had hung around, he’d have discovered our algorithm, Prism. In this talk I’m going to give you enough details to make up your mind. But I’ll say that the algorithm is beautiful and that surest way of seeing this is that it can be cleanly and efficient implemented. In fact we are so happy with it I can run it live here. }
     \note{our main finding is that bitcoin couples security and thorughput, latency. the new protocol called ``Prism'' decouples performance from security}
+    \note{4. When demoing: say it’s open source and check it out on Github.}
     \begin{itemize}
             \pause
         \item \alert{Bitcoin}: throughput, latency coupled with security
             \pause
         \item \alert{Prism}: decouple performance from security
     \end{itemize}
+    \note{the algorithm is beautiful, such that we can code it in 10000 lines of code and a few months. I'll start the demo here}
 \end{frame}
 
 \begin{frame}
@@ -73,6 +77,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
+    \note{5. Prism is built so much on longest chain, that I’m going to spend a few minutes to go over the longest chain protocol.}
     \note{before talking about Prism, we need to first look at Bitcoin... Define forking}
     \frametitle{Bitcoin: the longest chain rule}
     \begin{figure}
@@ -337,6 +342,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \frametitle{Scale proposing with lots of transaction blocks}
     \note{bitcoin throughput is limited because of forking. if forking does not matter anymore, we can mine as much as possible. We achieve that using transaction blcoks. then begin order}
     \note{propose tx block at high rate w/o impacting proposer forking BECAUSE proposer still mines at low rate}
+    \note{6. Add sortition. Proof of work is done jointly on all types of blocks. The output of the hash is used to decide the type of block it becomes. Say it in voting}
     \begin{figure}
         \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
         \tikzstyle{voter} = [draw, fill=green!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em]
@@ -389,6 +395,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \note{proposer block still has two roles: propose and vote. we want to reduce the confirmation depth k here. now I'm going to introduce voter blocks. just think of it as drawing the figure in a different way. one chain? not helpful. still 25 deep. 1000 chains? 40\% chance to revert one chain, low prob to reverse half}
+    \note{say sortition again}
     \frametitle{Scale voting with lots of voter chains}
     \begin{figure}
         \tikzstyle{transaction} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
@@ -528,6 +535,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
+    \note{Say that the instance is not heavy during the demo} 
     \frametitle{Prism: $\sim$70,000 tps and $\sim$10s latency}
     \note{I'll cover the comparison later}
     \begin{figure}
@@ -730,6 +738,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Comparison with Algorand, Bitcoin-NG, Nakamoto}
+    \note{Algorand is the same setup on their code.}
     % mention algorand bottleneck
     \only<1>{
     \begin{figure}
@@ -789,22 +798,23 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 
 \begin{frame}
     \frametitle{Takeaways}
-    \begin{block}{}
     \begin{itemize}
         \item Deconstruct blockchain into \alert{proposing} and \alert{voting}
         \item Scale each part to the physical limit
         \item Must parallelize everying in the client
         \item Current bottleneck is ledger keeping and SSD
+        \item Simple ad natural extension of Natamoto
     \end{itemize}
-    \end{block}
-    \begin{block}{Resources}
+\end{frame}
+
+\begin{frame}
+    \note{Simple algorithm, clean ad lightweight implementation, open source code, peer reviewed papers, multi-university collaboration. But still built on  PoW with its inherent energy inefficiency. In the next talk we will remove this one deficiency. }
     \begin{itemize}
-        \item Code: t.leiy.me/prism-code
-        \item Theory Paper: Deconstructing the Blockchain to Approach Physical Limits
-        \item System Paper: t.leiy.me/prism-paper
-        \item Online Demo: t.leiy.me/prism-demo
+        \item \alert{Code}: t.leiy.me/prism-code
+        \item \alert{Theory Paper}: Deconstructing the Blockchain to Approach Physical Limits
+        \item \alert{System Paper}: t.leiy.me/prism-paper
+        \item \alert{Online Demo}: t.leiy.me/prism-demo
     \end{itemize}
-    \end{block}
 \end{frame}
 
 \end{document}
