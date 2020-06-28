@@ -24,7 +24,7 @@
 \institute{\inst{1} MIT CSAIL \and \inst{2} Stanford University \and \inst{3}
 University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University}
 
-\date[SBC 2020]{The Stanford Blockchain Conference 2020}
+\date[June 28, 2020]{CS Peers Talk at Peking University}
 
 \titlegraphic{\includegraphics[height=0.7cm]{mit}\hspace*{1cm}\includegraphics[height=0.7cm]{su}\hspace*{1.0cm}\includegraphics[height=0.7cm]{uiuc}\hspace*{1.0cm}\includegraphics[height=0.7cm]{cmu}}
 
@@ -36,6 +36,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
     \note{start with ``I'm excited to be here to talk about''}
     \note{In the spirit of blockchain, it’s a collaborator effort across four different university\dots}
 \end{frame}
+
 
 \begin{frame}
     \note{we all know that bitcoin has very good security... don't say the numbers}
@@ -74,6 +75,50 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \begin{frame}
     \frametitle{This talk}
     \tableofcontents[currentsection,currentsubsection]
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bitcoin prime}
+    \begin{columns}
+        \column{.5\textwidth}
+        \begin{block}{The blockchain}
+            \begin{figure}
+                \tikzstyle{block} = [draw, fill=blue!20, rectangle, rounded corners, minimum height=1em, minimum width=1.6em, text centered]
+                \begin{tikzpicture}[auto, node distance=3em, >=latex']
+                    \node[block](genesis){Genesis};
+                    \pause
+                    \node[block, below of=genesis](1){A pays B \$10};
+                    \draw[->](1) to (genesis);
+                    \pause
+                    \node[block, below of=1](2){C pays A \$40};
+                    \draw[->](2) to (1);
+                    \pause
+                    \node[block, below of=2](3){\dots};
+                    \draw[->](3) to (2);
+                \end{tikzpicture}
+            \end{figure}
+        \end{block}
+        \pause
+        Link: Hash of the parent block
+        \pause
+        \column{.5\textwidth}
+        \begin{block}{Mining}
+            \begin{block}{}
+            $\text{Hash}(\text{Block}) \le \text{Threshold}$
+            \end{block}
+
+            \pause
+
+            \begin{block}{}
+            $\text{Hash}(\text{Block} \vert \text{Nonce}) \le \text{Threshold}$
+
+            Randomly try difference nonces.
+
+            \pause
+            Poisson arrival!
+            \end{block}
+        \end{block}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
@@ -535,7 +580,7 @@ University of Illinois Urbana-Champaign \and \inst{4} Carnegie Mellon University
 \end{frame}
 
 \begin{frame}
-    \note{Say that the instance is not heavy during the demo} 
+    \note{Say that the instance is not heavy during the demo. Demo: http://t.leiy.me/prism-dashboard}
     \frametitle{Prism: $\sim$70,000 tps and $\sim$10s latency}
     \note{I'll cover the comparison later}
     \begin{figure}
